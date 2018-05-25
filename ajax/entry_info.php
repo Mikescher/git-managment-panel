@@ -34,8 +34,7 @@ try
 
 	$message = trim(git_exec($path, 'git log -1 --pretty=%B'));
 
-	//$head_remote = ($remoteurl==null) ? '?' : trim(explode("\t", trim(git_exec($path, "git ls-remote $remoteurl $branch")))[0]);
-	$head_remote = ($remoteurl==null) ? '?' : trim(git_exec($path, "git log $remotename/$branch -1 --pretty=%H"));;
+	$head_remote = remoteHead($path, $remoteurl, $branch);
 
 	echo json_encode(
 	[

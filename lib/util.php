@@ -44,6 +44,25 @@ function endsWith($haystack, $needle)
 	return $length === 0 || (substr($haystack, -$length) === $needle);
 }
 
+function str_contains($hastack, $needle)
+{
+	return (strpos($hastack, $needle) !== false);
+}
+
+function unparse_url($parsed_url)
+{
+	$scheme   = isset($parsed_url['scheme']) ? $parsed_url['scheme'] . '://' : '';
+	$host     = isset($parsed_url['host']) ? $parsed_url['host'] : '';
+	$port     = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+	$user     = isset($parsed_url['user']) ? $parsed_url['user'] : '';
+	$pass     = isset($parsed_url['pass']) ? ':' . $parsed_url['pass']  : '';
+	$pass     = ($user || $pass) ? "$pass@" : '';
+	$path     = isset($parsed_url['path']) ? $parsed_url['path'] : '';
+	$query    = isset($parsed_url['query']) ? '?' . $parsed_url['query'] : '';
+	$fragment = isset($parsed_url['fragment']) ? '#' . $parsed_url['fragment'] : '';
+	return "$scheme$user$pass$host$port$path$query$fragment";
+}
+
 function array_last($arr)
 {
 	return $arr[count($arr)-1];
@@ -109,4 +128,42 @@ function git_exec_live($cwd, $cmd)
 	{
 		throw new Exception("ERROR: Could not run 'git pull'");
 	}
+}
+
+function remoteHead($path, $url, $branch)
+{
+	if ($url == null) return '?';
+
+	try
+	{
+		$lsr = trim(git_exec($path, "git ls-remote $url $branch"));
+
+		if (!str_contains($lsr, 'denied') && !str_contains($lsr, 'fatal') && !str_contains($lsr, 'unable to access')) return $lsr;
+
+	}
+	catch (Exception $e)
+	{
+		// ignore
+	}
+
+	try
+	{
+		$purl = parse_url($url);
+		$user = explode('/', trim($purl['path'], '/'))[0];
+
+		$purl['user'] = $user;
+
+		$newurl = unparse_url($purl);
+
+		$lsr = trim(git_exec($path, "git ls-remote $newurl $branch"));
+
+		if (!str_contains($lsr, 'denied') && !str_contains($lsr, 'fatal') && !str_contains($lsr, 'unable to access')) return $lsr;
+	}
+	catch (Exception $e)
+	{
+		// ignore
+	}
+
+	return "ERR";
+
 }
