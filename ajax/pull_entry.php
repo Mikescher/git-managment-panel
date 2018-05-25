@@ -6,7 +6,17 @@ try
 {
 	$force = $_GET['force'];
 	$path  = $_GET['path'];
-	git_exec_live($path, $force ? 'git pull --force' : 'git pull');
+
+	if ($force)
+	{
+		git_exec_live($path, 'git fetch');
+		git_exec_live($path, 'git reset origin --hard');
+	}
+	else
+	{
+		git_exec_live($path, 'git pull');
+	}
+
 }
 catch (Exception $e)
 {
