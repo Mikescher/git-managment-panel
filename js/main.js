@@ -211,6 +211,7 @@ function updateEntriesChain(curr, count)
 	trow_status.removeClass('si_red');
 	trow_status.addClass('si_gray');
 	btn_url.attr('href', '#');
+	trow_remote.removeClass('single_col_error');
 
 	for (let btn of trow_actions.children(".btn_action")) $(btn).addClass('btn_disabled');
 
@@ -233,9 +234,22 @@ function updateEntriesChain(curr, count)
 			trow_status.removeClass('si_green');
 			trow_status.removeClass('si_yellow');
 			trow_status.removeClass('si_red');
-			trow_status.addClass((data.loc === data.remote) ? 'si_green' : 'si_yellow');
 
-			if (data.loc !== data.remote) trow.addClass('tab_main_row_updatable');
+			if (!data.remote_ok)
+			{
+				trow_status.addClass('si_gray');
+				trow_remote.addClass('single_col_error');
+				trow_remote.attr('title', data.remote_err)
+			}
+			else if ((data.loc !== data.remote))
+			{
+				trow_status.addClass('si_yellow');
+				trow.addClass('tab_main_row_updatable');
+			}
+			else
+			{
+				trow_status.addClass('si_green');
+			}
 		}
 		else
 		{

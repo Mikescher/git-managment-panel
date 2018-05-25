@@ -172,19 +172,22 @@ function git_exec_live($cwd, $cmd)
 	}
 }
 
-function remoteHead($path, $url, $branch)
+function remoteHead($path, $url, $branch, &$remote_warnings, &$hasFailed)
 {
 	if ($url == null) return '?';
 
 	try
 	{
-		$lsr = trim(git_exec($path, "git ls-remote $url $branch"));
+		$cmd = "git ls-remote $url $branch";
+		$lsr = trim(git_exec($path, $cmd));
 
 		if (endsWithIgnoreCase($lsr, 'refs/heads/'.$branch)) return trim(explode("\t", $lsr)[0]);
+
+		$remote_warnings .= '$ '.$cmd."\n".$lsr."\n\n\n";
 	}
 	catch (Exception $e)
 	{
-		// ignore
+		$remote_warnings .= '$ '.$cmd."\n".$e->getMessage()."\n\n\n";
 	}
 
 	try
@@ -199,11 +202,14 @@ function remoteHead($path, $url, $branch)
 		$lsr = trim(git_exec($path, "git ls-remote $newurl $branch"));
 
 		if (endsWithIgnoreCase($lsr, 'refs/heads/'.$branch)) return trim(explode("\t", $lsr)[0]);
+
+		$remote_warnings .= '$ '.$cmd."\n".$lsr."\n\n\n";
 	}
 	catch (Exception $e)
 	{
-		// ignore
+		$remote_warnings .= '$ '.$cmd."\n".$e->getMessage()."\n\n\n";
 	}
 
+	$hasFailed = true;
 	return "ERR";
 }

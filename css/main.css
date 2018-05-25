@@ -250,3 +250,7 @@ body
 .tab_main_row_updatable {
     color: #FF0;
 }
+
+.single_col_error {
+    color: #F00;
+}

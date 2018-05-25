@@ -34,20 +34,27 @@ try
 
 	$message = trim(git_exec($path, 'git log -1 --pretty=%B'));
 
+	$remote_warnings = "";
+	$remote_fail = false;
+
 	if ($CONFIG['no_remote_query'])
 		$head_remote = ($remoteurl==null) ? '?' : trim(git_exec($path, "git log $remotename/$branch -1 --pretty=%H"));
 	else
-		$head_remote = remoteHead($path, $remoteurl, $branch);
+		$head_remote = remoteHead($path, $remoteurl, $branch, $remote_warnings, $remote_fail);
 
 	echo json_encode(
 	[
         'ok' => true,
 		'err' => 'none',
+
 		'msg' => $message,
 		'loc' => $head_local,
-		'remote' => $head_remote,
 		'url' => $remoteurl,
 		'branch' => $branch,
+
+		'remote' => $head_remote,
+		'remote_ok' => !$remote_fail,
+		'remote_err' => $remote_warnings,
     ]);
 }
 catch (Exception $e)

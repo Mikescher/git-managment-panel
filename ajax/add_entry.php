@@ -6,7 +6,7 @@ try
 {
 	$path = pcombine(__DIR__,  '..', 'config.txt');
 
-	$newentry = $_GET['path'];
+	$newentry = trim(rtrim(trim($_GET['path'], '/'))) . '/';
 
 	$head = (pcombine($newentry, '.git', 'HEAD'));
 
