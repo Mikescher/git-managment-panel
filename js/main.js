@@ -61,6 +61,7 @@ function refreshEntries()
 			tr    += "  <td class=\"tab_main_d_act\"  >"; // actions
 			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", false);return false;\" href=\"#\">Pull</a>";
 			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", true);return false;\" href=\"#\">Force Pull</a>";
+			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doRefresh("+i+");return false;\" href=\"#\">Refresh</a>";
 			tr    += "    <a class=\"btn_action btn_disabled btn_action_url\" onclick=\"if($(this).hasClass('btn_disabled'))return false; return true;\" href=\"#\">Open</a>";
 			tr    += "  </td>";
 			tr    += "</tr>"
@@ -85,6 +86,11 @@ function refreshEntries()
 		console.error(errorThrown);
 		alert(textStatus);
 	});
+}
+
+function doRefresh(pathid)
+{
+	updateEntriesChain(pathid, -1);
 }
 
 function closePanelOutput()
