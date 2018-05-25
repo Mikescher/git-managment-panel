@@ -8,7 +8,7 @@ try
 
 	$newentry = $_GET['path'];
 
-	$head = (pcombine($path, '.git', 'HEAD'));
+	$head = (pcombine($newentry, '.git', 'HEAD'));
 
 	if (!file_exists($head))
 	{
