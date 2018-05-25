@@ -63,7 +63,7 @@ function git_exec($cwd, $cmd)
 		$stdout = stream_get_contents($pipes[1]);
 		fclose($pipes[1]);
 
-		$stderr = stream_get_contents($pipes[2]);
+		stream_get_contents($pipes[2]);
 		fclose($pipes[2]);
 
 		proc_close($process);
