@@ -59,9 +59,9 @@ function refreshEntries()
 			tr    += "  <td class=\"tab_main_d_loc\"  ><span class=\"msg_light\">querying...</span></td>"; // head_local
 			tr    += "  <td class=\"tab_main_d_remo\" ><span class=\"msg_light\">querying...</span></td>"; // head_remote
 			tr    += "  <td class=\"tab_main_d_act\"  >"; // actions
-			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"doPull("+i+", false);return false;\" href=\"#\">Pull</a>";
-			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"doPull("+i+", true);return false;\" href=\"#\">Force Pull</a>";
-			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"doOpen("+i+");return false;\" href=\"#\">Open</a>";
+			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", false);return false;\" href=\"#\">Pull</a>";
+			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", true);return false;\" href=\"#\">Force Pull</a>";
+			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doOpen("+i+");return false;\" href=\"#\">Open</a>";
 			tr    += "  </td>";
 			tr    += "</tr>"
 			table_body.append(tr);
@@ -71,7 +71,7 @@ function refreshEntries()
 		let tr = "<tr>";
 		tr    += "  <td colspan=\"4\"><input id=\"input_add\"></td>";
 		tr    += "  <td>";
-		tr    += "    <a class=\"btn_action\" onclick=\"doAdd();return false;\" href=\"#\">Add</a>";
+		tr    += "    <a class=\"btn_action\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doAdd();return false;\" href=\"#\">Add</a>";
 		tr    += "  </td>";
 		tr    += "</tr>"
 		table_body.append(tr);
@@ -99,6 +99,9 @@ function doPull(pathid, force)
 	let pnl = $("#pnl_stdout");
 	let pnl_header_x = $("#pnl_stdout > #pnl_stdout_header > a");
 	let pnl_content = $("#pnl_stdout > #pnl_stdout_content");
+
+	let trow_actions = $("#tab_main_row_"+curr+" > .tab_main_d_act");
+	for (let btn of trow_actions.children(".btn_action")) $(btn).addClass('btn_disabled');
 
 	pnl.removeClass('stdout_hidden');
 	pnl.addClass('stdout_visible');
@@ -134,7 +137,7 @@ function doPull(pathid, force)
 		}
 		else
 		{
-			setTimeout(function(){ updateEntriesChain(0, PATHS.size); }, 50);
+			setTimeout(function(){ updateEntriesChain(pathid, -1); }, 50);
 		}
 	})
 	.fail(function(jqXHR, textStatus, errorThrown)
@@ -146,6 +149,10 @@ function doPull(pathid, force)
 
 		pnl_content.addClass('pnl_stdout_content_status_error');
 		pnl_header_x.removeClass('generic_hidden');
+	})
+	.always(function()
+	{
+		for (let btn of trow_actions.children(".btn_action")) $(btn).removeClass('btn_disabled');
 	});
 }
 
@@ -181,7 +188,7 @@ function doAdd()
 
 function updateEntriesChain(curr, count)
 {
-	if (curr == count) return;
+	if (curr === count) return;
 
 	let trow    = $("#tab_main_row_"+curr);
 	let trow_path    = $("#tab_main_row_"+curr+" > .tab_main_d_path");
@@ -192,6 +199,17 @@ function updateEntriesChain(curr, count)
 	let trow_status  = $("#tab_main_row_"+curr+" > .tab_main_d_path > .statind");
 
 	trow.removeClass('tab_main_row_updatable');
+
+	trow_message.html('<span class="msg_light">querying...</span>');
+	trow_local.html('<span class="msg_light">querying...</span>');
+	trow_remote.html('<span class="msg_light">querying...</span>');
+	trow_status.removeClass('si_gray');
+	trow_status.removeClass('si_green');
+	trow_status.removeClass('si_yellow');
+	trow_status.removeClass('si_red');
+	trow_status.addClass('si_gray');
+
+	for (let btn of trow_actions.children(".btn_action")) $(btn).addClass('btn_disabled');
 
 	$.ajax({ url: 'ajax/entry_info.php?path=' + encodeURIComponent(PATHS.get(curr)), dataType: 'json' })
 	.done(function(data, textStatus, jqXHR)
@@ -251,7 +269,7 @@ function updateEntriesChain(curr, count)
 	})
 	.always(function()
 	{
-		setTimeout(function(){updateEntriesChain(curr+1, count);}, 1);
+		if (count !== -1) setTimeout(function(){updateEntriesChain(curr+1, count);}, 1);
 	});
 }
 
