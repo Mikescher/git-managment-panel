@@ -42,7 +42,6 @@ body
     border-width: 0 0 0 1px;
     font-size: inherit;
     margin: 0;
-    overflow: visible;
     padding: 0.5em 1em;
 }
 
@@ -110,6 +109,7 @@ body
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    max-width: 450px;
 }
 
 .btn_action, .btn_action:visited

@@ -40,11 +40,11 @@ function refreshEntries()
 {
 	let table_body = $("#tbl_main tbody");
 
-	table_body.html("");
-
 	$.ajax({ url: 'ajax/list_entries.php', dataType: 'json' })
 	.done(function(data, textStatus, jqXHR)
 	{
+		table_body.html("");
+
 		PATHS.clear();
 		DATAS.clear();
 		
@@ -134,13 +134,15 @@ function doPull(pathid, force)
 		}
 		else
 		{
-			refreshEntries();
+			setTimeout(function(){ updateEntriesChain(0, PATHS.size); }, 50);
 		}
 	})
 	.fail(function(jqXHR, textStatus, errorThrown)
 	{
 		console.error(textStatus);
 		console.error(errorThrown);
+
+		pnl_content.append('<br/><br/>Ajax Error:' + errorThrown);
 
 		pnl_content.addClass('pnl_stdout_content_status_error');
 		pnl_header_x.removeClass('generic_hidden');
@@ -199,6 +201,7 @@ function updateEntriesChain(curr, count)
 		if (data.ok)
 		{
 			trow_message.html(data.msg);
+			trow_message.attr('title', data.msg);
 			trow_local.html(data.loc.substr(data.loc.length-8));
 			trow_remote.html(data.remote.substr(data.remote.length-8));
 
