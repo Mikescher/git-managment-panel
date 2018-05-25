@@ -7,15 +7,35 @@ try
 	$force = $_GET['force'];
 	$path  = $_GET['path'];
 
-	if ($force)
+	$index = pcombine($path, '.git', 'index');
+
+	$owner = posix_getpwuid(fileowner($index))['name'];
+
+	if ($CONFIG['use_sudopull'])
 	{
-		git_exec_live($path, 'git fetch');
-		git_exec_live($path, 'git reset origin --hard');
+		if ($force)
+		{
+			git_exec_live($path, 'sudopull force "'.$path.'"');
+		}
+		else
+		{
+			git_exec_live($path, 'sudopull normal "'.$path.'"');
+		}
 	}
 	else
 	{
-		git_exec_live($path, 'git pull');
+
+		if ($force)
+		{
+			git_exec_live($path, 'git fetch');
+			git_exec_live($path, 'git reset origin --hard');
+		}
+		else
+		{
+			git_exec_live($path, 'git pull');
+		}
 	}
+
 
 }
 catch (Exception $e)

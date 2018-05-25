@@ -1,5 +1,7 @@
 <?php
 
+$CONFIG = include __DIR__ . '/../config.php';
+
 function _pcombine2($a, $b)
 {
 	$a = str_replace('/', DIRECTORY_SEPARATOR, $a);

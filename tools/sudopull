@@ -1,0 +1,28 @@
+#!/bin/bash
+
+git_uid="$(ls -nd .git | awk '{print $3}')"
+git_usr="$(ls -ld .git | awk '{print $3}')"
+
+if [ "$(id -u)" != "${git_uid}" ]
+then
+        echo "FORCING CORRECT USER ${git_usr} (${git_uid})"
+        sudo su -c "$0" "$@" -s /bin/bash "${git_usr}"
+        exit $?
+fi
+
+
+
+if [ "$1" = "force" ]; then
+
+        pushd "$2" || exit
+        git fetch
+        git reset origin --hard
+        popd || exit
+
+elif [ "$1" = "normal" ]; then
+
+        pushd "$2" || exit
+        git pull
+        popd || exit
+
+fi

@@ -165,10 +165,6 @@ body
 .si_yellow { background: #FF0; }
 .si_red { background: #F00; }
 
-
-
-
-
 #pnl_stdout
 {
     background: #222;
@@ -249,4 +245,8 @@ body
 
 .pnl_stdout_content_status_error {
     background: #311 !important;
+}
+
+.tab_main_row_updatable {
+    color: #FF0;
 }

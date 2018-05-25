@@ -1,5 +1,5 @@
-var PATHS = new Map();
-var DATAS = new Map();
+const PATHS = new Map();
+const DATAS = new Map();
 
 window.onload = function ()
 {
@@ -109,7 +109,7 @@ function doPull(pathid, force)
 
 	$.ajax(
 	{
-		url: 'ajax/pull_entry.php?force='+force+'&path=' + encodeURIComponent(PATHS.get(pathid)),
+		url: 'ajax/pull_entry.php?force='+(force?1:0)+'&path=' + encodeURIComponent(PATHS.get(pathid)),
 		dataType: 'text',
 		xhrFields:
 		{
@@ -132,7 +132,10 @@ function doPull(pathid, force)
 		{
 			pnl_content.addClass('pnl_stdout_content_status_error');
 		}
-
+		else
+		{
+			refreshEntries();
+		}
 	})
 	.fail(function(jqXHR, textStatus, errorThrown)
 	{
@@ -178,12 +181,15 @@ function updateEntriesChain(curr, count)
 {
 	if (curr == count) return;
 
+	let trow    = $("#tab_main_row_"+curr);
 	let trow_path    = $("#tab_main_row_"+curr+" > .tab_main_d_path");
 	let trow_message = $("#tab_main_row_"+curr+" > .tab_main_d_msg");
 	let trow_local   = $("#tab_main_row_"+curr+" > .tab_main_d_loc");
 	let trow_remote  = $("#tab_main_row_"+curr+" > .tab_main_d_remo");
 	let trow_actions = $("#tab_main_row_"+curr+" > .tab_main_d_act");
 	let trow_status  = $("#tab_main_row_"+curr+" > .tab_main_d_path > .statind");
+
+	trow.removeClass('tab_main_row_updatable');
 
 	$.ajax({ url: 'ajax/entry_info.php?path=' + encodeURIComponent(PATHS.get(curr)), dataType: 'json' })
 	.done(function(data, textStatus, jqXHR)
@@ -203,6 +209,8 @@ function updateEntriesChain(curr, count)
 			trow_status.removeClass('si_yellow');
 			trow_status.removeClass('si_red');
 			trow_status.addClass((data.loc === data.remote) ? 'si_green' : 'si_yellow');
+
+			if (data.loc !== data.remote) trow.addClass('tab_main_row_updatable');
 		}
 		else
 		{
