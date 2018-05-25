@@ -51,8 +51,6 @@ function array_last($arr)
 
 function git_exec($cwd, $cmd)
 {
-	global $CONFIG;
-
 	$descriptorspec = [ 0 => ["pipe", "r"], 1 => ["pipe", "w"], 2 => ["pipe", "w"] ];
 	$env = ['HOME' => '/var/www'];
 
@@ -81,8 +79,6 @@ function git_exec($cwd, $cmd)
 
 function git_exec_live($cwd, $cmd)
 {
-	global $CONFIG;
-
 	$descriptorspec = [ 0 => ["pipe", "r"], 1 => ["pipe", "w"], 2 => ["pipe", "w"] ];
 	$env = ['HOME' => '/var/www'];
 
