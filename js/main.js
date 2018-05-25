@@ -4,10 +4,10 @@ var DATAS = new Map();
 window.onload = function ()
 {
 	refreshEntries();
-}
+};
 
 function htmlspecialchars(str) {
-    var map = {
+	const map = {
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
@@ -19,7 +19,7 @@ function htmlspecialchars(str) {
 
 
 function escapeHtml (string) {
-	var entityMap = {
+	const entityMap = {
 		'&': '&amp;',
 		'<': '&lt;',
 		'>': '&gt;',
@@ -76,7 +76,7 @@ function refreshEntries()
 		tr    += "</tr>"
 		table_body.append(tr);
 		
-		setTimeout(function(){ updateEntriesChain(0, i); }, 350);
+		setTimeout(function(){ updateEntriesChain(0, i); }, 50);
 		
 	})
 	.fail(function(jqXHR, textStatus, errorThrown)
@@ -240,7 +240,7 @@ function updateEntriesChain(curr, count)
 	})
 	.always(function()
 	{
-		setTimeout(function(){updateEntriesChain(curr+1, count);}, 150);
+		setTimeout(function(){updateEntriesChain(curr+1, count);}, 1);
 	});
 }
 
