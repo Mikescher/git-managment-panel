@@ -12,6 +12,6 @@ $config =
 
 
 if (file_exists(__DIR__ . '/config_user.php'))
-	return array_merge(include __DIR__ . '/config_user.php', $config);
+	return array_merge($config, include __DIR__ . '/config_user.php');
 else
 	return $config;
