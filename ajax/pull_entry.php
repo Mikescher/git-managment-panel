@@ -15,11 +15,11 @@ try
 	{
 		if ($force)
 		{
-			git_exec_live($path, 'sudo sudopull force "'.$path.'"');
+			simple_exec_live('sudo '.$CONFIG['sudopull_path'].' force "'.$path.'"');
 		}
 		else
 		{
-			git_exec_live($path, 'sudo sudopull normal "'.$path.'"');
+			simple_exec_live('sudo '.$CONFIG['sudopull_path'].' normal "'.$path.'"');
 		}
 	}
 	else

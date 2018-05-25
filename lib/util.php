@@ -76,13 +76,44 @@ function array_last($arr)
 {
 	return $arr[count($arr)-1];
 }
+function simple_exec_live($cmd)
+{
+	$descriptorspec = [ 0 => ["pipe", "r"], 1 => ["pipe", "w"], 2 => ["pipe", "w"] ];
+	$env = [ 'HOME' => '/var/www' ];
+
+	echo ('$ ' . $cmd . "\n");
+	@flush();
+	@ob_flush();
+
+	$process = proc_open($cmd . ' 2>&1', $descriptorspec, $pipes, null, $env);
+
+	if (is_resource($process))
+	{
+		fclose($pipes[0]);
+
+		while (!feof($pipes[1]))
+		{
+			echo fgets($pipes[1]);
+			@flush();
+			@ob_flush();
+		}
+
+		fclose($pipes[2]);
+
+		$exit = proc_close($process);
+
+		if ($exit != 0) throw new Exception("ERROR: Exitcode = " . $exit);
+	}
+	else
+	{
+		throw new Exception("ERROR: Could not run 'git pull'");
+	}
+}
 
 function git_exec($cwd, $cmd)
 {
-	global $CONFIG;
-
 	$descriptorspec = [ 0 => ["pipe", "r"], 1 => ["pipe", "w"], 2 => ["pipe", "w"] ];
-	$env = [ 'HOME' => '/var/www', 'PATH' => $CONFIG['path'] ];
+	$env = [ 'HOME' => '/var/www' ];
 
 	$process = proc_open($cmd . ' 2>&1', $descriptorspec, $pipes, $cwd, $env);
 
@@ -109,10 +140,8 @@ function git_exec($cwd, $cmd)
 
 function git_exec_live($cwd, $cmd)
 {
-	global $CONFIG;
-
 	$descriptorspec = [ 0 => ["pipe", "r"], 1 => ["pipe", "w"], 2 => ["pipe", "w"] ];
-	$env = [ 'HOME' => '/var/www', 'PATH' => $CONFIG['path'] ];
+	$env = [ 'HOME' => '/var/www' ];
 
 	echo ('$ ' . $cmd . "\n");
 	@flush();

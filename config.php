@@ -3,8 +3,8 @@
 $config =
 [
 	'use_sudopull' => false,
+	'sudopull_path' => '/usr/local/bin/sudopull',
 	'no_remote_query' => false,
-	'path' => getenv('path'), //parse_ini_file("/etc/environment")['PATH'],
 ];
 
 
