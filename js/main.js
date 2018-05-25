@@ -17,7 +17,26 @@ function htmlspecialchars(str) {
     return str.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-function refreshEntries(order)
+
+function escapeHtml (string) {
+	var entityMap = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#39;',
+		'/': '&#x2F;',
+		'`': '&#x60;',
+		'=': '&#x3D;'
+	};
+	return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+		return entityMap[s];
+	})
+	.replace(/\r\n/g, '\n')
+	.replace(/\n/g, '<br/>\n');
+}
+
+function refreshEntries()
 {
 	let table_body = $("#tbl_main tbody");
 
@@ -42,6 +61,7 @@ function refreshEntries(order)
 			tr    += "  <td class=\"tab_main_d_act\"  >"; // actions
 			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"doPull("+i+", false);return false;\" href=\"#\">Pull</a>";
 			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"doPull("+i+", true);return false;\" href=\"#\">Force Pull</a>";
+			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"doOpen("+i+");return false;\" href=\"#\">Open</a>";
 			tr    += "  </td>";
 			tr    += "</tr>"
 			table_body.append(tr);
@@ -49,7 +69,7 @@ function refreshEntries(order)
 		}
 
 		let tr = "<tr>";
-		tr    += "  <td colspan=\"4\"><input id=\"input_add\"></input></td>";
+		tr    += "  <td colspan=\"4\"><input id=\"input_add\"></td>";
 		tr    += "  <td>";
 		tr    += "    <a class=\"btn_action\" onclick=\"doAdd();return false;\" href=\"#\">Add</a>";
 		tr    += "  </td>";
@@ -67,9 +87,66 @@ function refreshEntries(order)
 	});
 }
 
+function closePanelOutput()
+{
+	let pnl = $("#pnl_stdout");
+	pnl.removeClass('stdout_visible');
+	pnl.addClass('stdout_hidden');
+}
+
 function doPull(pathid, force)
 {
-	//TODO
+	let pnl = $("#pnl_stdout");
+	let pnl_header_x = $("#pnl_stdout > #pnl_stdout_header > a");
+	let pnl_content = $("#pnl_stdout > #pnl_stdout_content");
+
+	pnl.removeClass('stdout_hidden');
+	pnl.addClass('stdout_visible');
+	pnl_content.removeClass('pnl_stdout_content_status_error');
+	pnl_header_x.addClass('generic_hidden');
+
+	pnl_content.html('');
+
+	$.ajax(
+	{
+		url: 'ajax/pull_entry.php?force='+force+'&path=' + encodeURIComponent(PATHS.get(pathid)),
+		dataType: 'text',
+		xhrFields:
+		{
+			onprogress: function(e)
+			{
+				let response = e.currentTarget.response;
+
+				pnl_content.html(escapeHtml(response));
+
+				console.log('__on_progress__');
+			}
+		}
+	})
+	.done(function(data, textStatus, jqXHR)
+	{
+		pnl_content.html(escapeHtml(data));
+		pnl_header_x.removeClass('generic_hidden');
+
+		if (data.includes('[[*ERR*]]'))
+		{
+			pnl_content.addClass('pnl_stdout_content_status_error');
+		}
+
+	})
+	.fail(function(jqXHR, textStatus, errorThrown)
+	{
+		console.error(textStatus);
+		console.error(errorThrown);
+
+		pnl_content.addClass('pnl_stdout_content_status_error');
+		pnl_header_x.removeClass('generic_hidden');
+	});
+}
+
+function doOpen(pathid)
+{
+	window.open(DATAS.get(pathid).url, "_self");
 }
 
 function doAdd()
@@ -86,7 +163,7 @@ function doAdd()
 		else
 		{
 			console.error(data);
-			alert(data.msg);
+			alert(data.err);
 		}
 	})
 	.fail(function(jqXHR, textStatus, errorThrown)
@@ -116,8 +193,8 @@ function updateEntriesChain(curr, count)
 		if (data.ok)
 		{
 			trow_message.html(data.msg);
-			trow_local.html(data.loc);
-			trow_remote.html(data.remote);
+			trow_local.html(data.loc.substr(data.loc.length-8));
+			trow_remote.html(data.remote.substr(data.remote.length-8));
 
 			for (let btn of trow_actions.children(".btn_action")) $(btn).removeClass('btn_disabled');
 

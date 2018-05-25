@@ -1,7 +1,20 @@
-[
-  "/var/www/blackforestbytes",
-  "/var/www/toolbelt/soemthing",
-  "/usr/local/sbin/common",
-  "/usr/local/sbin/personal",
-  "/etc/apache/sites-available"
-]
+<?php
+
+include_once __DIR__ . '/../lib/util.php';
+
+$path = pcombine(__DIR__,  '..', 'config.txt');
+
+$content = file_get_contents($path);
+
+$lines = explode("\n", $content);
+
+$result = [];
+
+foreach ($lines as $line)
+{
+    $l = trim($line);
+    if ($l !== '') $result []= $l;
+
+}
+
+echo json_encode($result);
