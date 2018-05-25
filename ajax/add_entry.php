@@ -6,6 +6,16 @@ try
 {
 	$path = pcombine(__DIR__,  '..', 'config.txt');
 
+	$newentry = $_GET['path'];
+
+	$head = (pcombine($path, '.git', 'HEAD'));
+
+	if (!file_exists($head))
+	{
+		echo json_encode(['ok' => false, 'err' => 'Not a repository']);
+		return;
+	}
+
 	$content = file_get_contents($path);
 	$lines = explode("\n", $content);
 	$result = [];
@@ -15,7 +25,7 @@ try
 		if ($l !== '') $result []= $l;
 	}
 
-	$result []= $_GET['path'];
+	$result []= $newentry;
 
 	$result = array_unique($result);
 	asort($result);

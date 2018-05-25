@@ -32,7 +32,7 @@ try
 		}
 	}
 
-	$message = trim(git_exec($path, 'git log -1'));
+	$message = trim(git_exec($path, 'git log -1 --pretty=%B'));
 
 	$head_remote = ($remoteurl==null) ? '?' : trim(explode(' ', git_exec($path, "git ls-remote $remoteurl $branch"))[0]);
 
