@@ -61,7 +61,7 @@ function refreshEntries()
 			tr    += "  <td class=\"tab_main_d_act\"  >"; // actions
 			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", false);return false;\" href=\"#\">Pull</a>";
 			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", true);return false;\" href=\"#\">Force Pull</a>";
-			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doOpen("+i+");return false;\" href=\"#\">Open</a>";
+			tr    += "    <a class=\"btn_action btn_disabled btn_action_url\" onclick=\"if($(this).hasClass('btn_disabled'))return false; return true;\" href=\"#\">Open</a>";
 			tr    += "  </td>";
 			tr    += "</tr>"
 			table_body.append(tr);
@@ -156,11 +156,6 @@ function doPull(pathid, force)
 	});
 }
 
-function doOpen(pathid)
-{
-	window.open(DATAS.get(pathid).url, "_self");
-}
-
 function doAdd()
 {
 	let newpath = $("#input_add").val();
@@ -197,6 +192,7 @@ function updateEntriesChain(curr, count)
 	let trow_remote  = $("#tab_main_row_"+curr+" > .tab_main_d_remo");
 	let trow_actions = $("#tab_main_row_"+curr+" > .tab_main_d_act");
 	let trow_status  = $("#tab_main_row_"+curr+" > .tab_main_d_path > .statind");
+	let btn_url      = $("#tab_main_row_"+curr+" > .tab_main_d_act .btn_action_url");
 
 	trow.removeClass('tab_main_row_updatable');
 
@@ -208,6 +204,7 @@ function updateEntriesChain(curr, count)
 	trow_status.removeClass('si_yellow');
 	trow_status.removeClass('si_red');
 	trow_status.addClass('si_gray');
+	btn_url.attr('href', '#');
 
 	for (let btn of trow_actions.children(".btn_action")) $(btn).addClass('btn_disabled');
 
@@ -222,6 +219,7 @@ function updateEntriesChain(curr, count)
 			trow_message.attr('title', data.msg);
 			trow_local.html(data.loc.substr(data.loc.length-8));
 			trow_remote.html(data.remote.substr(data.remote.length-8));
+			btn_url.attr('href', data.url);
 
 			for (let btn of trow_actions.children(".btn_action")) $(btn).removeClass('btn_disabled');
 
