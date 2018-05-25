@@ -100,7 +100,7 @@ function doPull(pathid, force)
 	let pnl_header_x = $("#pnl_stdout > #pnl_stdout_header > a");
 	let pnl_content = $("#pnl_stdout > #pnl_stdout_content");
 
-	let trow_actions = $("#tab_main_row_"+curr+" > .tab_main_d_act");
+	let trow_actions = $("#tab_main_row_"+pathid+" > .tab_main_d_act");
 	for (let btn of trow_actions.children(".btn_action")) $(btn).addClass('btn_disabled');
 
 	pnl.removeClass('stdout_hidden');

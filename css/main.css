@@ -112,7 +112,7 @@ body
     max-width: 450px;
 }
 
-.btn_action, .btn_action:visited
+.btn_action
 {
     display: inline-flex;
     justify-content: center;
