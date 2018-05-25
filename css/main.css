@@ -1,0 +1,106 @@
+body
+{
+  background: black;
+  color: white;
+  font-family: monospace;
+  text-align: center;
+}
+
+#pnl_root 
+{
+    margin: 32px;
+}
+
+#hdr_caption {
+    font-size: 60px;
+    text-align: center;
+    margin: 0 0 .32em 0;
+}
+
+#pnl_tbl_main
+{
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    flex-flow: column;
+    align-items: center;
+}
+
+#tbl_main 
+{
+    border-spacing: 0;
+    border-collapse: separate;
+    empty-cells: show;
+    border: 1px solid #FFF;
+    border-radius:16px;
+}
+
+#tbl_main td,
+#tbl_main th 
+{
+    border-left: 1px solid #FFF;
+    border-width: 0 0 0 1px;
+    font-size: inherit;
+    margin: 0;
+    overflow: visible;
+    padding: 0.5em 1em;
+}
+
+#tbl_main td:first-child,
+#tbl_main th:first-child 
+{
+    border-left-width: 0;
+}
+
+#tbl_main thead 
+{
+    background-color: #000;
+    color: #FFF;
+    text-align: left;
+    vertical-align: bottom;
+}
+
+#tbl_main td 
+{
+    background-color: transparent;
+}
+
+#tbl_main thead {
+    border-bottom: 1px solid #FFF;
+}
+
+#tbl_main td {
+    border-bottom: 1px solid #FFF;
+}
+
+#tbl_main tbody > tr:first-child > td {
+    border-top: 1px solid #FFF;
+}
+
+#tbl_main tbody > tr:last-child > td {
+    border-bottom-width: 0;
+}
+
+#tbl_main tr:hover
+{
+    background: #222;
+}
+
+#pnl_stdout 
+{
+    display: none;
+    visibility: hidden;
+}
+
+.msg_light 
+{
+    color: #888;
+}
+
+#input_add 
+{
+    width: 100%;
+    border:none;
+    background: #FFF;
+    color: #000;
+}
