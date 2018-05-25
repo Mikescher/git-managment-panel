@@ -11,7 +11,7 @@ try
 	if (startsWith($content_head, 'ref: '))
     {
         $branch = array_last(explode('/', substr($content_head, 5)));
-		$head_local = file_get_contents(pcombine($path, '.git', trim(substr($content_head, 5))));
+		$head_local = trim(file_get_contents(pcombine($path, '.git', trim(substr($content_head, 5)))));
     }
     else
     {
