@@ -79,8 +79,10 @@ function array_last($arr)
 
 function git_exec($cwd, $cmd)
 {
+	global $CONFIG;
+
 	$descriptorspec = [ 0 => ["pipe", "r"], 1 => ["pipe", "w"], 2 => ["pipe", "w"] ];
-	$env = array_merge($_ENV, [ 'HOME' => '/var/www' ]);
+	$env = [ 'HOME' => '/var/www', 'PATH' => $CONFIG['path'] ];
 
 	$process = proc_open($cmd . ' 2>&1', $descriptorspec, $pipes, $cwd, $env);
 
@@ -107,8 +109,10 @@ function git_exec($cwd, $cmd)
 
 function git_exec_live($cwd, $cmd)
 {
+	global $CONFIG;
+
 	$descriptorspec = [ 0 => ["pipe", "r"], 1 => ["pipe", "w"], 2 => ["pipe", "w"] ];
-	$env = array_merge($_ENV, [ 'HOME' => '/var/www' ]);
+	$env = [ 'HOME' => '/var/www', 'PATH' => $CONFIG['path'] ];
 
 	echo ('$ ' . $cmd . "\n");
 	@flush();

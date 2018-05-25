@@ -4,6 +4,7 @@ $config =
 [
 	'use_sudopull' => false,
 	'no_remote_query' => false,
+	'path' => getenv('path'), //parse_ini_file("/etc/environment")['PATH'],
 ];
 
 
