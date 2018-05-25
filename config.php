@@ -3,7 +3,7 @@
 $config =
 [
 	'use_sudopull' => false,
-	'sudopull_path' => '/usr/local/bin/sudopull',
+	'sudopull_path' => '/usr/local/sbin/sudopull',
 	'no_remote_query' => false,
 ];
 

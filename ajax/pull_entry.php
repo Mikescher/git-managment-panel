@@ -15,11 +15,11 @@ try
 	{
 		if ($force)
 		{
-			simple_exec_live('sudo '.$CONFIG['sudopull_path'].' force "'.$path.'"');
+			simple_exec_live('sudo -H '.$CONFIG['sudopull_path'].' force "'.$path.'"');
 		}
 		else
 		{
-			simple_exec_live('sudo '.$CONFIG['sudopull_path'].' normal "'.$path.'"');
+			simple_exec_live('sudo -H '.$CONFIG['sudopull_path'].' normal "'.$path.'"');
 		}
 	}
 	else
