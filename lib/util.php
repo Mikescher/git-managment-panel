@@ -44,6 +44,13 @@ function endsWith($haystack, $needle)
 	return $length === 0 || (substr($haystack, -$length) === $needle);
 }
 
+function endsWithIgnoreCase($haystack, $needle)
+{
+	$length = strlen($needle);
+
+	return $length === 0 || (strtolower(substr($haystack, -$length)) === strtolower($needle));
+}
+
 function str_contains($hastack, $needle)
 {
 	return (strpos($hastack, $needle) !== false);
@@ -138,8 +145,7 @@ function remoteHead($path, $url, $branch)
 	{
 		$lsr = trim(git_exec($path, "git ls-remote $url $branch"));
 
-		if (!str_contains($lsr, 'denied') && !str_contains($lsr, 'fatal') && !str_contains($lsr, 'unable to access')) return $lsr;
-
+		if (endsWithIgnoreCase($lsr, '/refs/heads/'.$branch)) return trim(explode("\t", $lsr)[0]);
 	}
 	catch (Exception $e)
 	{
@@ -157,7 +163,7 @@ function remoteHead($path, $url, $branch)
 
 		$lsr = trim(git_exec($path, "git ls-remote $newurl $branch"));
 
-		if (!str_contains($lsr, 'denied') && !str_contains($lsr, 'fatal') && !str_contains($lsr, 'unable to access')) return $lsr;
+		if (endsWithIgnoreCase($lsr, '/refs/heads/'.$branch)) return trim(explode("\t", $lsr)[0]);
 	}
 	catch (Exception $e)
 	{
@@ -165,5 +171,4 @@ function remoteHead($path, $url, $branch)
 	}
 
 	return "ERR";
-
 }
