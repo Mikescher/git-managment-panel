@@ -62,7 +62,7 @@ function refreshEntries()
 			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", false);return false;\" href=\"#\">Pull</a>";
 			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", true);return false;\" href=\"#\">Force Pull</a>";
 			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doRefresh("+i+");return false;\" href=\"#\">Refresh</a>";
-			tr    += "    <a class=\"btn_action btn_disabled btn_action_url\" onclick=\"if($(this).hasClass('btn_disabled'))return false; return true;\" href=\"#\">Open</a>";
+			tr    += "    <a class=\"btn_action btn_disabled btn_action_url\" onclick=\"if($(this).hasClass('btn_disabled'))return false; return true;\" target=\"_blank\" href=\"#\">Open</a>";
 			tr    += "  </td>";
 			tr    += "</tr>"
 			table_body.append(tr);
