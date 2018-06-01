@@ -126,15 +126,21 @@ body
 }
 
 .btn_action.btn_force
-{
-    background: #F0F0F0;
-    color: #F66;
+{    
+	background: #800;
+	border: 1px solid #F00;
 }
 
 .btn_action:hover
 {
     background: #FFF;
     color: #00F;
+}
+
+.btn_action.btn_force:hover
+{    
+	background: #A00;
+	color: #00F;
 }
 
 .btn_disabled
@@ -150,6 +156,15 @@ body
     border: 1px solid #888;
     background: #444;
     color: #AAA;
+    cursor: default;
+}
+
+.btn_disabled.btn_force:hover
+{
+    border: 1px solid #888;
+    color: #AAA;
+	background: #800;
+	border: 1px solid #F00;
     cursor: default;
 }
 
