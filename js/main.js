@@ -54,15 +54,18 @@ function refreshEntries()
 			PATHS.set(i, item);
 
 			let tr = "<tr id=\"tab_main_row_"+i+"\">";
-			tr    += "  <td class=\"tab_main_d_path\" title=\""+htmlspecialchars(item)+"\" ><div class=\"statind si_gray\"></div>"+item+"</td>"; // path
+			tr    += "  <td class=\"tab_main_d_path\" title=\""+htmlspecialchars(item)+"\" ><div class=\"statind si_gray\"></div>"+getLastPathComponent(item)+"</td>"; // path
 			tr    += "  <td class=\"tab_main_d_msg\"  ><span class=\"msg_light\">querying...</span></td>"; // message
 			tr    += "  <td class=\"tab_main_d_loc\"  ><span class=\"msg_light\">querying...</span></td>"; // head_local
 			tr    += "  <td class=\"tab_main_d_remo\" ><span class=\"msg_light\">querying...</span></td>"; // head_remote
 			tr    += "  <td class=\"tab_main_d_act\"  >"; // actions
-			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", false);return false;\" href=\"#\">Pull</a>";
-			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", true);return false;\" href=\"#\">Force Pull</a>";
-			tr    += "    <a class=\"btn_action btn_disabled\" onclick=\"if($(this).hasClass('btn_disabled'))return false; doRefresh("+i+");return false;\" href=\"#\">Refresh</a>";
-			tr    += "    <a class=\"btn_action btn_disabled btn_action_url\" onclick=\"if($(this).hasClass('btn_disabled'))return false; return true;\" target=\"_blank\" href=\"#\">Open</a>";
+			tr    += "    <a class=\"btn_action btn_disabled\"                onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", false);return false;\" alt=\"git pull\"                           href=\"#\"><i class=\"fas fa-angle-double-down\"></i></a>";
+			tr    += "    <a class=\"btn_action btn_disabled btn_force\"      onclick=\"if($(this).hasClass('btn_disabled'))return false; doPull("+i+", true); return false;\" alt=\"git pull --force\"                   href=\"#\"><i class=\"fas fa-angle-double-down\"></i></a>";
+			tr    += "    <a class=\"btn_action btn_disabled\"                onclick=\"if($(this).hasClass('btn_disabled'))return false; doStatus("+i+");     return false;\" alt=\"git status\"                         href=\"#\"><i class=\"fas fa-question\"         ></i></a>";
+			tr    += "    <a class=\"btn_action btn_disabled btn_force\"      onclick=\"if($(this).hasClass('btn_disabled'))return false; doPush("+i+", false);return false;\" alt=\"git push\"                           href=\"#\"><i class=\"fas fa-angle-double-up\"  ></i></a>";
+			tr    += "    <a class=\"btn_action btn_disabled\"                onclick=\"if($(this).hasClass('btn_disabled'))return false; doPush("+i+", true); return false;\" alt=\"git push --force\"                   href=\"#\"><i class=\"fas fa-angle-double-up\"  ></i></a>";
+			tr    += "    <a class=\"btn_action btn_disabled btn_action_url\" onclick=\"if($(this).hasClass('btn_disabled'))return false;                      return true; \" alt=\"Open repository\"  target=\"_blank\" href=\"#\"><i class=\"fas fa-code\"             ></i></a>";
+			tr    += "    <a class=\"btn_action btn_disabled\"                onclick=\"if($(this).hasClass('btn_disabled'))return false; doRefresh("+i+");    return false;\" alt=\"Refresh\"                            href=\"#\"><i class=\"fas fa-sync-alt\"         ></i></a>";
 			tr    += "  </td>";
 			tr    += "</tr>"
 			table_body.append(tr);
@@ -88,6 +91,12 @@ function refreshEntries()
 	});
 }
 
+function getLastPathComponent(str)
+{
+	var parts = str.split('/');
+	return parts.pop() || parts.pop(); // handle potential trailing slash
+}
+
 function doRefresh(pathid)
 {
 	updateEntriesChain(pathid, -1);
@@ -101,6 +110,21 @@ function closePanelOutput()
 }
 
 function doPull(pathid, force)
+{
+	git_cmd('ajax/pull_entry.php?force='+(force?1:0)+'&path=' + encodeURIComponent(PATHS.get(pathid)));
+}
+
+function doPush(pathid, force)
+{
+	git_cmd('ajax/push_entry.php?force='+(force?1:0)+'&path=' + encodeURIComponent(PATHS.get(pathid)));
+}
+
+function doStatus(pathid)
+{
+	git_cmd('ajax/status_entry.php?path=' + encodeURIComponent(PATHS.get(pathid)));
+}
+
+function git_cmd(uri)
 {
 	let pnl = $("#pnl_stdout");
 	let pnl_header_x = $("#pnl_stdout > #pnl_stdout_header > a");
@@ -118,7 +142,7 @@ function doPull(pathid, force)
 
 	$.ajax(
 	{
-		url: 'ajax/pull_entry.php?force='+(force?1:0)+'&path=' + encodeURIComponent(PATHS.get(pathid)),
+		url: uri,
 		dataType: 'text',
 		xhrFields:
 		{

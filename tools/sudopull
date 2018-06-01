@@ -27,4 +27,22 @@ elif [ "$1" = "normal" ]; then
   git pull
   popd > /dev/null || exit
 
+elif [ "$1" = "push" ]; then
+
+  pushd "$2" > /dev/null || exit
+  git push
+  popd > /dev/null || exit
+
+elif [ "$1" = "forcepush" ]; then
+
+  pushd "$2" > /dev/null || exit
+  git push --force
+  popd > /dev/null || exit
+
+elif [ "$1" = "status" ]; then
+
+  pushd "$2" > /dev/null || exit
+  git status
+  popd > /dev/null || exit
+
 fi

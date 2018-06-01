@@ -123,7 +123,12 @@ body
     background: #EEE;
     color: #000;
     text-decoration: none;
-    min-width: 40px;
+}
+
+.btn_action.btn_force
+{
+    background: #F0F0F0;
+    color: #F66;
 }
 
 .btn_action:hover
