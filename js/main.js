@@ -111,20 +111,20 @@ function closePanelOutput()
 
 function doPull(pathid, force)
 {
-	git_cmd('ajax/pull_entry.php?force='+(force?1:0)+'&path=' + encodeURIComponent(PATHS.get(pathid)));
+	git_cmd('ajax/pull_entry.php?force='+(force?1:0)+'&path=' + encodeURIComponent(PATHS.get(pathid)), pathid);
 }
 
 function doPush(pathid, force)
 {
-	git_cmd('ajax/push_entry.php?force='+(force?1:0)+'&path=' + encodeURIComponent(PATHS.get(pathid)));
+	git_cmd('ajax/push_entry.php?force='+(force?1:0)+'&path=' + encodeURIComponent(PATHS.get(pathid)), pathid);
 }
 
 function doStatus(pathid)
 {
-	git_cmd('ajax/status_entry.php?path=' + encodeURIComponent(PATHS.get(pathid)));
+	git_cmd('ajax/status_entry.php?path=' + encodeURIComponent(PATHS.get(pathid)), pathid);
 }
 
-function git_cmd(uri)
+function git_cmd(uri, pathid)
 {
 	let pnl = $("#pnl_stdout");
 	let pnl_header_x = $("#pnl_stdout > #pnl_stdout_header > a");
