@@ -6,13 +6,13 @@ try
 {
 	$path = pcombine(__DIR__,  '..', 'config.txt');
 
-	$newentry = trim(rtrim(trim($_GET['path'], '/'))) . '/';
+	$newentry = trim(rtrim(trim($_GET['path']), '/')) . '/';
 
 	$head = (pcombine($newentry, '.git', 'HEAD'));
 
 	if (!file_exists($head))
 	{
-		echo json_encode(['ok' => false, 'err' => 'Not a repository']);
+		echo json_encode(['ok' => false, 'err' => "'$head' is not a repository"]);
 		return;
 	}
 
