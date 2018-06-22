@@ -248,8 +248,8 @@ function updateEntriesChain(curr, count)
 		{
 			trow_message.html(data.msg);
 			trow_message.attr('title', data.msg);
-			trow_local.html(data.loc.substr(data.loc.length-8));
-			trow_remote.html(data.remote.substr(data.remote.length-8));
+			trow_local.html(data.loc.substr(0, 8));
+			trow_remote.html(data.remote.substr(0, 8));
 			btn_url.attr('href', data.url);
 
 			for (let btn of trow_actions.children(".btn_action")) $(btn).removeClass('btn_disabled');
