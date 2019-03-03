@@ -180,6 +180,8 @@ function remoteHead($path, $url, $branch, &$remote_warnings, &$hasFailed)
 	{
 		$cmd = "git ls-remote $url $branch";
 		$lsr = trim(git_exec($path, $cmd));
+		
+		if (strpos($lsr, "\n") !== false) $lsr = end(explode("\n", $lsr));
 
 		if (endsWithIgnoreCase($lsr, 'refs/heads/'.$branch)) return trim(explode("\t", $lsr)[0]);
 
@@ -200,6 +202,8 @@ function remoteHead($path, $url, $branch, &$remote_warnings, &$hasFailed)
 		$newurl = unparse_url($purl);
 
 		$lsr = trim(git_exec($path, "git ls-remote $newurl $branch"));
+
+		if (strpos($lsr, "\n") !== false) $lsr = end(explode("\n", $lsr));
 
 		if (endsWithIgnoreCase($lsr, 'refs/heads/'.$branch)) return trim(explode("\t", $lsr)[0]);
 
