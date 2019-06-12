@@ -246,7 +246,7 @@ function updateEntriesChain(curr, count)
 
 		if (data.ok)
 		{
-			trow_message.html(data.msg);
+			trow_message.text(data.msg.split('\n')[0]);
 			trow_message.attr('title', data.msg);
 			trow_local.html(data.loc.substr(0, 8));
 			trow_remote.html(data.remote.substr(0, 8));
