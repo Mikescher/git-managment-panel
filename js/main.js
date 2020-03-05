@@ -19,6 +19,25 @@ function htmlspecialchars(str) {
     return str.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
+// https://stackoverflow.com/a/2450976/1761622
+function shuffle(array) {
+	let currentIndex = array.length, temporaryValue, randomIndex;
+
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex) {
+
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex -= 1;
+
+		// And swap it with the current element.
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;
+	}
+
+	return array;
+}
 
 function escapeHtml (string) {
 	const entityMap = {
@@ -84,7 +103,10 @@ function refreshEntries()
 
 		if (UPDATE_PARALLEL)
 		{
-			for (let jj=0; jj<i; jj++) setTimeout(function(){ updateEntriesChain(jj, -1); }, 50 + 100*jj);
+			let to = [];
+			for (let jj=0; jj<i; jj++) to.push(50 + 100*jj);
+			shuffle(to);
+			for (let jj=0; jj<i; jj++) setTimeout(function(){ updateEntriesChain(jj, -1); }, to[jj]);
 		}
 		else
 		{
