@@ -1,6 +1,8 @@
 const PATHS = new Map();
 const DATAS = new Map();
 
+const UPDATE_PARALLEL = true;
+
 window.onload = function ()
 {
 	refreshEntries();
@@ -79,8 +81,15 @@ function refreshEntries()
 		tr    += "  </td>";
 		tr    += "</tr>"
 		table_body.append(tr);
-		
-		setTimeout(function(){ updateEntriesChain(0, i); }, 50);
+
+		if (UPDATE_PARALLEL)
+		{
+			for (let jj=0; jj<i; jj++) setTimeout(function(){ updateEntriesChain(jj, -1); }, 50 + 100*jj);
+		}
+		else
+		{
+			setTimeout(function(){ updateEntriesChain(0, i); }, 50);
+		}
 		
 	})
 	.fail(function(jqXHR, textStatus, errorThrown)
