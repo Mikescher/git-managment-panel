@@ -180,10 +180,11 @@ function remoteHead($path, $url, $branch, &$remote_warnings, &$hasFailed)
 	{
 		$cmd = "git ls-remote $url $branch";
 		$lsr = trim(git_exec($path, $cmd));
-		
-		if (strpos($lsr, "\n") !== false) $lsr = end(explode("\n", $lsr));
 
-		if (endsWithIgnoreCase($lsr, 'refs/heads/'.$branch)) return trim(explode("\t", $lsr)[0]);
+		foreach (explode("\n", $lsr) as $line)
+		{
+			if (endsWithIgnoreCase($line, 'refs/heads/'.$branch)) return trim(explode("\t", $line)[0]);
+		}
 
 		$remote_warnings .= '$ '.$cmd."\n".$lsr."\n\n\n";
 	}
@@ -203,9 +204,10 @@ function remoteHead($path, $url, $branch, &$remote_warnings, &$hasFailed)
 
 		$lsr = trim(git_exec($path, "git ls-remote $newurl $branch"));
 
-		if (strpos($lsr, "\n") !== false) $lsr = end(explode("\n", $lsr));
-
-		if (endsWithIgnoreCase($lsr, 'refs/heads/'.$branch)) return trim(explode("\t", $lsr)[0]);
+		foreach (explode("\n", $lsr) as $line)
+		{
+			if (endsWithIgnoreCase($line, 'refs/heads/'.$branch)) return trim(explode("\t", $line)[0]);
+		}
 
 		$remote_warnings .= '$ '.$cmd."\n".$lsr."\n\n\n";
 	}
