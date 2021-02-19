@@ -53,9 +53,12 @@ function endsWithIgnoreCase($haystack, $needle)
 	return $length === 0 || (strtolower(substr($haystack, -$length)) === strtolower($needle));
 }
 
-function str_contains($hastack, $needle)
+if (!function_exists('str_contains'))
 {
-	return (strpos($hastack, $needle) !== false);
+	function str_contains($hastack, $needle)
+	{
+		return (strpos($hastack, $needle) !== false);
+	}
 }
 
 function unparse_url($parsed_url)
